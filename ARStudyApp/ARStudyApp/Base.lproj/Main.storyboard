@@ -10,14 +10,12 @@
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" userLabel="ARView" customClass="ViewController" customModule="ARStudyApp" customModuleProvider="target" sceneMemberID="viewController">
-                    <button key="view" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="FAO-Cz-N1m">
+                    <arView key="view" multipleTouchEnabled="YES" contentMode="scaleToFill" id="tv5-g5-wgO">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <state key="normal" title="Button"/>
-                        <buttonConfiguration key="configuration" style="gray" title="Button"/>
-                    </button>
+                    </arView>
                     <connections>
-                        <outlet property="arButton" destination="FAO-Cz-N1m" id="VHS-gw-aVr"/>
+                        <outlet property="arView" destination="tv5-g5-wgO" id="3IX-Je-u1l"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

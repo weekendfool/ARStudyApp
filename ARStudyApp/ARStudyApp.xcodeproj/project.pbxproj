@@ -16,6 +16,8 @@
 		8C4EBEE529E9A3E200D0B21F /* ARStudyAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4EBEE429E9A3E200D0B21F /* ARStudyAppTests.swift */; };
 		8C4EBEEF29E9A3E200D0B21F /* ARStudyAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4EBEEE29E9A3E200D0B21F /* ARStudyAppUITests.swift */; };
 		8C4EBEF129E9A3E200D0B21F /* ARStudyAppUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4EBEF029E9A3E200D0B21F /* ARStudyAppUITestsLaunchTests.swift */; };
+		8C4EBEFE29EAEF6000D0B21F /* ARTestView.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8C4EBEFD29EAEF6000D0B21F /* ARTestView.storyboard */; };
+		8C4EBF0029EAEF7F00D0B21F /* ARTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4EBEFF29EAEF7F00D0B21F /* ARTestViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +50,8 @@
 		8C4EBEEA29E9A3E200D0B21F /* ARStudyAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ARStudyAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8C4EBEEE29E9A3E200D0B21F /* ARStudyAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARStudyAppUITests.swift; sourceTree = "<group>"; };
 		8C4EBEF029E9A3E200D0B21F /* ARStudyAppUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARStudyAppUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		8C4EBEFD29EAEF6000D0B21F /* ARTestView.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ARTestView.storyboard; sourceTree = "<group>"; };
+		8C4EBEFF29EAEF7F00D0B21F /* ARTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARTestViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,6 +108,8 @@
 				8C4EBED429E9A3DE00D0B21F /* Main.storyboard */,
 				8C4EBED729E9A3E100D0B21F /* Assets.xcassets */,
 				8C4EBED929E9A3E100D0B21F /* LaunchScreen.storyboard */,
+				8C4EBEFD29EAEF6000D0B21F /* ARTestView.storyboard */,
+				8C4EBEFF29EAEF7F00D0B21F /* ARTestViewController.swift */,
 			);
 			path = ARStudyApp;
 			sourceTree = "<group>";
@@ -231,6 +237,7 @@
 			files = (
 				8C4EBEDB29E9A3E100D0B21F /* LaunchScreen.storyboard in Resources */,
 				8C4EBED829E9A3E100D0B21F /* Assets.xcassets in Resources */,
+				8C4EBEFE29EAEF6000D0B21F /* ARTestView.storyboard in Resources */,
 				8C4EBED629E9A3DE00D0B21F /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -259,6 +266,7 @@
 				8C4EBED129E9A3DE00D0B21F /* ViewController.swift in Sources */,
 				8C4EBECF29E9A3DE00D0B21F /* AppDelegate.swift in Sources */,
 				8C4EBED329E9A3DE00D0B21F /* Experience.rcproject in Sources */,
+				8C4EBF0029EAEF7F00D0B21F /* ARTestViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
