@@ -11,6 +11,7 @@ import RealityKit
 class ViewController: UIViewController {
     
     @IBOutlet var arView: ARView!
+    @IBOutlet var arButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,5 +21,20 @@ class ViewController: UIViewController {
         
         // Add the box anchor to the scene
         arView.scene.anchors.append(boxAnchor)
+    }
+    
+    // 準備
+    func setup() {
+        
+    }
+    
+    // 回転
+    func lound() {
+        
+    }
+    
+    // 発射
+    func shoot() {
+        
     }
 }
