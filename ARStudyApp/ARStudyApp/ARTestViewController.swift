@@ -19,6 +19,7 @@ class ARTestViewController: UIViewController {
     // MARK: - 変数
     
     let rootAnchor = AnchorEntity()
+    let box = ModelEntity(mesh: .generateBox(size: simd_make_float3(0.3, 0.3, 0.3)))
     
     // MARK: - ライフサイクル
     
@@ -46,7 +47,7 @@ class ARTestViewController: UIViewController {
     func makeBoxView() {
         rootAnchor.position = simd_make_float3(0, -0.5, -1)
         
-        let box = ModelEntity(mesh: .generateBox(size: simd_make_float3(0.3, 0.3, 0.3)))
+//       let box = ModelEntity(mesh: .generateBox(size: simd_make_float3(0.3, 0.3, 0.3)))
         let unlitMaterial = UnlitMaterial(color: .systemBlue)
         box.model?.materials = [unlitMaterial]
         
@@ -61,7 +62,20 @@ class ARTestViewController: UIViewController {
     
     // 発射
     func shoot() {
+        let newPosition = simd_make_float3(
+            rootAnchor.transform.translation.x + 0.05,
+            rootAnchor.transform.translation.y,
+            rootAnchor.transform.translation.z
+            )
         
+        let controller = box.move(
+            to: Transform(scale: simd_make_float3(1, 1, 1),
+                          rotation: rootAnchor.orientation,
+                          translation: newPosition),
+            relativeTo: rootAnchor,
+            duration: 5,
+            timingFunction: .linear
+            )
     }
 
     @IBAction func tappedARButton(_ sender: Any) {
