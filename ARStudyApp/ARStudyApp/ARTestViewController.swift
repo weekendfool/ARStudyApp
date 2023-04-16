@@ -28,7 +28,9 @@ class ARTestViewController: UIViewController {
 
         arView.session.delegate = self
         
-
+        setup()
+        
+        makeBoxView()
         
     }
     
@@ -76,10 +78,16 @@ class ARTestViewController: UIViewController {
             duration: 5,
             timingFunction: .linear
             )
+        
+       
+        print("----------------------")
+       
     }
 
     @IBAction func tappedARButton(_ sender: Any) {
-        makeBoxView()
+       
+        
+        shoot()
     }
     
 }
