@@ -16,6 +16,7 @@ class ARTestViewController: UIViewController {
     @IBOutlet weak var arView: ARView!
     @IBOutlet weak var arButton: UIButton!
     
+    @IBOutlet weak var arButton2: UIButton!
     // MARK: - 変数
     
     let rootAnchor = AnchorEntity()
@@ -83,6 +84,11 @@ class ARTestViewController: UIViewController {
         print("----------------------")
        
     }
+    
+    // 座標取得
+    func getPosition() {
+        
+    }
 
     @IBAction func tappedARButton(_ sender: Any) {
        
@@ -90,6 +96,8 @@ class ARTestViewController: UIViewController {
         shoot()
     }
     
+    @IBAction func tappedARButton2(_ sender: Any) {
+    }
 }
 
 extension ARTestViewController: ARSessionDelegate {
