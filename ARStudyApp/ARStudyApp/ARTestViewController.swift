@@ -31,7 +31,7 @@ class ARTestViewController: UIViewController {
         
         setup()
         
-        makeBoxView()
+//        makeBoxView()
         
     }
     
@@ -55,6 +55,23 @@ class ARTestViewController: UIViewController {
         box.model?.materials = [unlitMaterial]
         
         rootAnchor.addChild(box)
+        arView.scene.anchors.append(rootAnchor)
+    }
+    
+    // 弾丸の生成
+    func makeBullet() {
+        // 大きさ
+        let size: Float = 0.1
+        // 色
+        let color = UIColor.systemBlue
+        
+        // 球体を生成
+        let bulletNode = MeshResource.generateBox(size: size)
+        
+        // 3dコンテンツ
+        let bulletModel = ModelEntity(mesh: bulletNode)
+        
+        rootAnchor.addChild(bulletModel)
         arView.scene.anchors.append(rootAnchor)
     }
     
@@ -85,6 +102,10 @@ class ARTestViewController: UIViewController {
        
     }
     
+    func shoot2() {
+        makeBullet()
+    }
+    
     // 座標取得
     func getPosition() {
         
@@ -97,6 +118,7 @@ class ARTestViewController: UIViewController {
     }
     
     @IBAction func tappedARButton2(_ sender: Any) {
+        makeBullet()
     }
 }
 
