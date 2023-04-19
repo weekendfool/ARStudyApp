@@ -102,9 +102,7 @@ class ARTestViewController: UIViewController {
        
     }
     
-    func shoot2() {
-        makeBullet()
-    }
+   
     
     // 座標取得
     func getPosition() {
