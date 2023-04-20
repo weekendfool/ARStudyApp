@@ -71,6 +71,9 @@ class ARTestViewController: UIViewController {
         // 3dコンテンツ
         let bulletModel = ModelEntity(mesh: bulletNode)
         
+        let unlitMaterial = UnlitMaterial(color: .systemBlue)
+        bulletModel.model?.materials = [unlitMaterial]
+        
         rootAnchor.addChild(bulletModel)
         arView.scene.anchors.append(rootAnchor)
     }
