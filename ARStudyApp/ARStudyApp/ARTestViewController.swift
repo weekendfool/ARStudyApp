@@ -8,6 +8,7 @@
 import UIKit
 import RealityKit
 import ARKit
+import MultipeerConnectivity
 
 class ARTestViewController: UIViewController {
 
@@ -21,6 +22,8 @@ class ARTestViewController: UIViewController {
     
     let rootAnchor = AnchorEntity()
     let box = ModelEntity(mesh: .generateBox(size: simd_make_float3(0.3, 0.3, 0.3)))
+    
+    var bulletModel = ModelEntity()
     
     // MARK: - ライフサイクル
     
@@ -47,16 +50,16 @@ class ARTestViewController: UIViewController {
     }
     
     // 立方体の生成
-    func makeBoxView() {
-        rootAnchor.position = simd_make_float3(0, -0.5, -1)
-        
-//       let box = ModelEntity(mesh: .generateBox(size: simd_make_float3(0.3, 0.3, 0.3)))
-        let unlitMaterial = UnlitMaterial(color: .systemBlue)
-        box.model?.materials = [unlitMaterial]
-        
-        rootAnchor.addChild(box)
-        arView.scene.anchors.append(rootAnchor)
-    }
+//    func makeBoxView() {
+//        rootAnchor.position = simd_make_float3(0, -0.5, -1)
+//
+////       let box = ModelEntity(mesh: .generateBox(size: simd_make_float3(0.3, 0.3, 0.3)))
+//        let unlitMaterial = UnlitMaterial(color: .systemBlue)
+//        box.model?.materials = [unlitMaterial]
+//
+//        rootAnchor.addChild(box)
+//        arView.scene.anchors.append(rootAnchor)
+//    }
     
     // 弾丸の生成
     func makeBullet() {
@@ -69,7 +72,7 @@ class ARTestViewController: UIViewController {
         let bulletNode = MeshResource.generateBox(size: size)
         
         // 3dコンテンツ
-        let bulletModel = ModelEntity(mesh: bulletNode)
+        bulletModel = ModelEntity(mesh: bulletNode)
         
         let unlitMaterial = UnlitMaterial(color: .systemBlue)
         bulletModel.model?.materials = [unlitMaterial]
@@ -77,6 +80,35 @@ class ARTestViewController: UIViewController {
         rootAnchor.addChild(bulletModel)
         arView.scene.anchors.append(rootAnchor)
     }
+    
+    // 弾丸
+    func shoot2() {
+        
+        
+        // カメラ座標mの三メートル先
+        let infrontOfCamera = SIMD3<Float>(x: 0, y: 0, z: -5)
+        
+        // カメラ座標　-> アンカー座標
+        let bulletPos = rootAnchor.convert(position: infrontOfCamera, to: rootAnchor)
+        
+        // ３d座標を行列に変換
+        let movePos = float4x4.init(translation: bulletPos)
+        
+        // 移動
+        let animeMove = bulletModel.move(
+            to: movePos,
+            relativeTo: nil,
+            duration: 1.5,
+            timingFunction: .linear
+        )
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.6) {
+            self.bulletModel.removeFromParent()
+                }
+        
+        print("------------------")
+    }
+    
     
     // 回転
     func lound() {
@@ -114,15 +146,24 @@ class ARTestViewController: UIViewController {
 
     @IBAction func tappedARButton(_ sender: Any) {
        
+        makeBullet()
         
-        shoot()
     }
     
     @IBAction func tappedARButton2(_ sender: Any) {
-        makeBullet()
+        shoot2()
     }
 }
 
 extension ARTestViewController: ARSessionDelegate {
     
+}
+
+extension float4x4 {
+init(translation vector: SIMD3<Float>) {
+    self.init(.init(1, 0, 0, 0),
+              .init(0, 1, 0, 0),
+              .init(0, 0, 1, 0),
+              .init(vector.x, vector.y, vector.z, 1))
+}
 }
