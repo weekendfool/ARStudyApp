@@ -19,6 +19,7 @@ class ARTestViewController: UIViewController {
     
     @IBOutlet weak var arButton2: UIButton!
     // MARK: - 変数
+    let worldAnchor: AnchorEntity = AnchorEntity()
     
     let rootAnchor = AnchorEntity()
     let box = ModelEntity(mesh: .generateBox(size: simd_make_float3(0.3, 0.3, 0.3)))
@@ -66,7 +67,8 @@ class ARTestViewController: UIViewController {
         // 大きさ
         let size: Float = 0.1
         // 色
-        let color = UIColor.systemBlue
+        let color = UIColor.systemBlue.withAlphaComponent(0.8)
+        
         
         // 球体を生成
         let bulletNode = MeshResource.generateBox(size: size)
@@ -74,7 +76,7 @@ class ARTestViewController: UIViewController {
         // 3dコンテンツ
         bulletModel = ModelEntity(mesh: bulletNode)
         
-        let unlitMaterial = UnlitMaterial(color: .systemBlue)
+        let unlitMaterial = UnlitMaterial(color: color)
         bulletModel.model?.materials = [unlitMaterial]
         
         rootAnchor.addChild(bulletModel)
@@ -89,7 +91,7 @@ class ARTestViewController: UIViewController {
         let infrontOfCamera = SIMD3<Float>(x: 0, y: 0, z: -5)
         
         // カメラ座標　-> アンカー座標
-        let bulletPos = rootAnchor.convert(position: infrontOfCamera, to: rootAnchor)
+        let bulletPos = rootAnchor.convert(position: infrontOfCamera, to: nil)
         
         // ３d座標を行列に変換
         let movePos = float4x4.init(translation: bulletPos)
