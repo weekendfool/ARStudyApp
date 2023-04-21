@@ -115,6 +115,15 @@ class ARTestViewController: UIViewController {
     
     // 回転
     func lound() {
+        // 回転させたい角度
+        let rotation: Float = 360 * .pi / 180
+        
+        bulletAnthor.move(
+            to: Transform(pitch: 0, yaw: 0, roll: rotation),
+            relativeTo: nil,
+            duration: 1
+        )
+        
         
     }
     
