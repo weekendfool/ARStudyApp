@@ -21,10 +21,11 @@ class ARTestViewController: UIViewController {
     // MARK: - 変数
     let worldAnchor: AnchorEntity = AnchorEntity()
     
-    let rootAnchor = AnchorEntity()
-    let box = ModelEntity(mesh: .generateBox(size: simd_make_float3(0.3, 0.3, 0.3)))
+//    let rootAnchor = AnchorEntity()
+//    let box = ModelEntity(mesh: .generateBox(size: simd_make_float3(0.3, 0.3, 0.3)))
     
     var bulletModel = ModelEntity()
+    var bulletAnthor = AnchorEntity()
     
     // MARK: - ライフサイクル
     
@@ -47,7 +48,7 @@ class ARTestViewController: UIViewController {
         arView.debugOptions = [.showWorldOrigin, .showFeaturePoints]
         
         arView.session.run(configuration)
-        arView.scene.addAnchor(rootAnchor)
+        arView.scene.addAnchor(worldAnchor)
     }
     
     // 立方体の生成
@@ -79,8 +80,8 @@ class ARTestViewController: UIViewController {
         let unlitMaterial = UnlitMaterial(color: color)
         bulletModel.model?.materials = [unlitMaterial]
         
-        rootAnchor.addChild(bulletModel)
-        arView.scene.anchors.append(rootAnchor)
+        bulletAnthor.addChild(bulletModel)
+        arView.scene.anchors.append(bulletAnthor)
     }
     
     // 弾丸
@@ -91,13 +92,13 @@ class ARTestViewController: UIViewController {
         let infrontOfCamera = SIMD3<Float>(x: 0, y: 0, z: -5)
         
         // カメラ座標　-> アンカー座標
-        let bulletPos = rootAnchor.convert(position: infrontOfCamera, to: nil)
+        let bulletPos = bulletAnthor.convert(position: infrontOfCamera, to: nil)
         
         // ３d座標を行列に変換
         let movePos = float4x4.init(translation: bulletPos)
         
-        // 移動
-        let animeMove = bulletModel.move(
+        // 移動: アンカーを動かすともの全てが動く,モデルだけ動かすと二つに増える
+        let animeMove = bulletAnthor.move(
             to: movePos,
             relativeTo: nil,
             duration: 1.5,
@@ -105,7 +106,7 @@ class ARTestViewController: UIViewController {
         )
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.6) {
-            self.bulletModel.removeFromParent()
+            self.bulletAnthor.removeFromParent()
                 }
         
         print("------------------")
@@ -120,16 +121,16 @@ class ARTestViewController: UIViewController {
     // 発射
     func shoot() {
         let newPosition = simd_make_float3(
-            rootAnchor.transform.translation.x + 0.05,
-            rootAnchor.transform.translation.y,
-            rootAnchor.transform.translation.z
+            worldAnchor.transform.translation.x + 0.05,
+            worldAnchor.transform.translation.y,
+            worldAnchor.transform.translation.z
             )
         
-        let controller = box.move(
+        let controller = bulletModel.move(
             to: Transform(scale: simd_make_float3(1, 1, 1),
-                          rotation: rootAnchor.orientation,
+                          rotation: worldAnchor.orientation,
                           translation: newPosition),
-            relativeTo: rootAnchor,
+            relativeTo: nil,
             duration: 5,
             timingFunction: .linear
             )
