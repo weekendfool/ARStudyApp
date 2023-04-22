@@ -18,6 +18,7 @@ class ARTestViewController: UIViewController {
     @IBOutlet weak var arButton: UIButton!
     
     @IBOutlet weak var arButton2: UIButton!
+    @IBOutlet weak var arButton3: UIButton!
     // MARK: - 変数
     let worldAnchor: AnchorEntity = AnchorEntity()
     
@@ -116,11 +117,12 @@ class ARTestViewController: UIViewController {
     // 回転
     func lound() {
         // 回転させたい角度
-        let rotation: Float = 360 * .pi / 180
+        let rotation: Float = 180 * .pi / 180
         
+        //アンカー座標内でアンカーを回転させる
         bulletAnthor.move(
             to: Transform(pitch: 0, yaw: 0, roll: rotation),
-            relativeTo: nil,
+            relativeTo: bulletAnthor,
             duration: 1
         )
         
@@ -165,6 +167,11 @@ class ARTestViewController: UIViewController {
     @IBAction func tappedARButton2(_ sender: Any) {
         shoot2()
     }
+    
+    @IBAction func tappedARButton3(_ sender: Any) {
+        lound()
+    }
+    
 }
 
 extension ARTestViewController: ARSessionDelegate {

@@ -43,6 +43,19 @@
                                     <action selector="tappedARButton:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="a2a-0A-PgL"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="62K-er-V5C">
+                                <rect key="frame" x="100" y="510" width="190" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="VPb-ks-4zJ"/>
+                                    <constraint firstAttribute="height" relation="lessThanOrEqual" constant="50" id="bGT-cc-PWC"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="50" id="bhN-ZN-JMy"/>
+                                </constraints>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="tinted" title="3"/>
+                                <connections>
+                                    <action selector="tappedARButton3:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="jX6-48-Wlv"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -51,17 +64,21 @@
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="xfx-wn-GxM" secondAttribute="trailing" constant="100" id="3tq-VI-iY9"/>
                             <constraint firstItem="QL4-u3-TEO" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" id="CRU-Dc-0zp"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="bottom" secondItem="QL4-u3-TEO" secondAttribute="bottom" id="GgL-yZ-nxT"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="62K-er-V5C" secondAttribute="trailing" constant="100" id="NC5-VL-whP"/>
                             <constraint firstItem="xfx-wn-GxM" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="100" id="Qxm-ho-TMx"/>
+                            <constraint firstItem="62K-er-V5C" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="100" id="Yfy-qk-IlN"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="ZnK-fG-zEK" secondAttribute="trailing" constant="100" id="ZoD-8B-61b"/>
                             <constraint firstItem="QL4-u3-TEO" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="fMb-5M-X9o"/>
                             <constraint firstItem="xfx-wn-GxM" firstAttribute="top" secondItem="ZnK-fG-zEK" secondAttribute="bottom" constant="40" id="h98-ZN-EeL"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="bottom" secondItem="xfx-wn-GxM" secondAttribute="bottom" constant="80" id="p2J-W5-OAJ"/>
                             <constraint firstItem="ZnK-fG-zEK" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="100" id="wKk-Xw-A66"/>
+                            <constraint firstItem="ZnK-fG-zEK" firstAttribute="top" secondItem="62K-er-V5C" secondAttribute="bottom" constant="30" id="xB7-Lf-Ed5"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="arButton" destination="xfx-wn-GxM" id="3Wz-bT-XdG"/>
                         <outlet property="arButton2" destination="ZnK-fG-zEK" id="Sv8-MQ-BQF"/>
+                        <outlet property="arButton3" destination="62K-er-V5C" id="ry2-Wa-BRD"/>
                         <outlet property="arView" destination="QL4-u3-TEO" id="tyR-1u-Jwe"/>
                     </connections>
                 </viewController>
