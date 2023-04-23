@@ -49,7 +49,7 @@ class ARTestViewController: UIViewController {
         arView.debugOptions = [.showWorldOrigin, .showFeaturePoints]
         
         // 平面の発見
-        configuration.planeDetection = [.horizontal, .vertical]
+        configuration.planeDetection = [.horizontal]
         
         
         
@@ -111,16 +111,20 @@ class ARTestViewController: UIViewController {
     // 壁の生成
     func makeWallModel(anchor: ARPlaneAnchor) {
         // 大きさ
-        let size: Float = 0.5
+        let size = anchor.extent
         // 色
-        let color = UIColor.systemRed.withAlphaComponent(0.1)
+        let color = UIColor.systemRed.withAlphaComponent(0.5)
         
         var wallAnchor = AnchorEntity(anchor: anchor)
         var wallEntity = ModelEntity()
+        
+//        let testAnchor = AnchorEntity(plane: .horizontal)
+//        let
                 
         
-        // 球体を生成
-        let wall = MeshResource.generatePlane(width: size, depth: 1)
+        // 壁を生成
+        let wall = MeshResource.generatePlane(width: size.x, height: size.z)
+//        wallEntity.transform
         
         // 3dコンテンツ
         wallEntity = ModelEntity(mesh: wall)
@@ -131,6 +135,32 @@ class ARTestViewController: UIViewController {
         wallAnchor.addChild(wallEntity)
         arView.scene.anchors.append(wallAnchor)
     }
+    
+    func makeWallModel2(anchor: ARPlaneAnchor) {
+        // 大きさ
+        let size = anchor.extent
+        // 色
+        let color = UIColor.systemRed.withAlphaComponent(0.5)
+        
+        var wallEntity = ModelEntity()
+        
+        let wallAnchor = AnchorEntity(plane: .horizontal)
+        
+                
+        
+        // 壁を生成
+        let wall = MeshResource.generatePlane(width: size.x, depth: size.z)
+        
+        // 3dコンテンツ
+        wallEntity = ModelEntity(mesh: wall)
+        
+        let unlitMaterial = UnlitMaterial(color: color)
+        wallEntity.model?.materials = [unlitMaterial]
+        
+        wallAnchor.addChild(wallEntity)
+        arView.scene.anchors.append(wallAnchor)
+    }
+
     
     // 回転
     func lound() {
@@ -208,11 +238,24 @@ extension ARTestViewController: ARSessionDelegate {
             print("平面発見")
             print("anchors: \(anchors)")
             
-            makeWallModel(anchor: planeAnchor.first!)
+            makeWallModel2(anchor: planeAnchor.first!)
         }
         
        
         
+    }
+    
+    func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
+        if let planeAnchor = anchors as? [ARPlaneAnchor] {
+            print("==================")
+            print("平面上書き")
+            print("anchors: \(anchors)")
+            
+            makeWallModel2(anchor: planeAnchor.first!)
+            
+            
+//            makeWallModel(anchor: planeAnchor.first!)
+        }
     }
 }
 
