@@ -48,21 +48,16 @@ class ARTestViewController: UIViewController {
         let configuration = ARWorldTrackingConfiguration()
         arView.debugOptions = [.showWorldOrigin, .showFeaturePoints]
         
+        // 平面の発見
+        configuration.planeDetection = [.horizontal, .vertical]
+        
+        
+        
         arView.session.run(configuration)
         arView.scene.addAnchor(worldAnchor)
     }
     
-    // 立方体の生成
-//    func makeBoxView() {
-//        rootAnchor.position = simd_make_float3(0, -0.5, -1)
-//
-////       let box = ModelEntity(mesh: .generateBox(size: simd_make_float3(0.3, 0.3, 0.3)))
-//        let unlitMaterial = UnlitMaterial(color: .systemBlue)
-//        box.model?.materials = [unlitMaterial]
-//
-//        rootAnchor.addChild(box)
-//        arView.scene.anchors.append(rootAnchor)
-//    }
+   
     
     // 弾丸の生成
     func makeBullet() {
@@ -113,6 +108,29 @@ class ARTestViewController: UIViewController {
         print("------------------")
     }
     
+    // 壁の生成
+    func makeWallModel(anchor: ARPlaneAnchor) {
+        // 大きさ
+        let size: Float = 0.5
+        // 色
+        let color = UIColor.systemRed.withAlphaComponent(0.1)
+        
+        var wallAnchor = AnchorEntity(anchor: anchor)
+        var wallEntity = ModelEntity()
+                
+        
+        // 球体を生成
+        let wall = MeshResource.generatePlane(width: size, depth: 1)
+        
+        // 3dコンテンツ
+        wallEntity = ModelEntity(mesh: wall)
+        
+        let unlitMaterial = UnlitMaterial(color: color)
+        wallEntity.model?.materials = [unlitMaterial]
+        
+        wallAnchor.addChild(wallEntity)
+        arView.scene.anchors.append(wallAnchor)
+    }
     
     // 回転
     func lound() {
@@ -129,27 +147,34 @@ class ARTestViewController: UIViewController {
         
     }
     
-    // 発射
-    func shoot() {
-        let newPosition = simd_make_float3(
-            worldAnchor.transform.translation.x + 0.05,
-            worldAnchor.transform.translation.y,
-            worldAnchor.transform.translation.z
-            )
-        
-        let controller = bulletModel.move(
-            to: Transform(scale: simd_make_float3(1, 1, 1),
-                          rotation: worldAnchor.orientation,
-                          translation: newPosition),
-            relativeTo: nil,
-            duration: 5,
-            timingFunction: .linear
-            )
-        
-       
-        print("----------------------")
-       
+    // 反射
+    func reflection() {
+        // 平面の発見
+        // 当たったことの検知
+        // 方向転換
     }
+    
+    // 発射
+//    func shoot() {
+//        let newPosition = simd_make_float3(
+//            worldAnchor.transform.translation.x + 0.05,
+//            worldAnchor.transform.translation.y,
+//            worldAnchor.transform.translation.z
+//            )
+//
+//        let controller = bulletModel.move(
+//            to: Transform(scale: simd_make_float3(1, 1, 1),
+//                          rotation: worldAnchor.orientation,
+//                          translation: newPosition),
+//            relativeTo: nil,
+//            duration: 5,
+//            timingFunction: .linear
+//            )
+//
+//
+//        print("----------------------")
+//
+//    }
     
    
     
@@ -175,8 +200,22 @@ class ARTestViewController: UIViewController {
 }
 
 extension ARTestViewController: ARSessionDelegate {
-    
+    // 平面追加時の処理
+    func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
+        
+        if let planeAnchor = anchors as? [ARPlaneAnchor] {
+            print("==================")
+            print("平面発見")
+            print("anchors: \(anchors)")
+            
+            makeWallModel(anchor: planeAnchor.first!)
+        }
+        
+       
+        
+    }
 }
+
 
 extension float4x4 {
 init(translation vector: SIMD3<Float>) {
