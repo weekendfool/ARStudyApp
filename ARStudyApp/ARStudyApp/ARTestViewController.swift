@@ -28,12 +28,15 @@ class ARTestViewController: UIViewController {
     var bulletModel = ModelEntity()
     var bulletAnthor = AnchorEntity()
     
+    var wallEntity = ModelEntity()
+    
     // MARK: - ライフサイクル
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         arView.session.delegate = self
+        
         
         setup()
         
@@ -75,6 +78,8 @@ class ARTestViewController: UIViewController {
         
         let unlitMaterial = UnlitMaterial(color: color)
         bulletModel.model?.materials = [unlitMaterial]
+        
+        //　物理的挙動の追加
         
         bulletAnthor.addChild(bulletModel)
         arView.scene.anchors.append(bulletAnthor)
@@ -142,14 +147,18 @@ class ARTestViewController: UIViewController {
         // 色
         let color = UIColor.systemRed.withAlphaComponent(0.5)
         
-        var wallEntity = ModelEntity()
+       
         
-        let wallAnchor = AnchorEntity(plane: .horizontal)
-        
+//        let wallAnchor = AnchorEntity(
+//            plane: .horizontal,
+//            classification: .any,
+//            minimumBounds: [0, 0]
+//        )
+        var wallAnchor = AnchorEntity(anchor: anchor)
                 
         
         // 壁を生成
-        let wall = MeshResource.generatePlane(width: size.x, depth: size.z)
+        let wall = MeshResource.generatePlane(width: anchor.planeExtent.width, depth: anchor.planeExtent.height)
         
         // 3dコンテンツ
         wallEntity = ModelEntity(mesh: wall)
@@ -157,8 +166,26 @@ class ARTestViewController: UIViewController {
         let unlitMaterial = UnlitMaterial(color: color)
         wallEntity.model?.materials = [unlitMaterial]
         
+        wallEntity.name = "ok"
+        
+        print("$$$$$$$$$$$$$$$$")
+        print("wall: \(wallAnchor.anchorIdentifier)")
         wallAnchor.addChild(wallEntity)
+//        worldAnchor.addChild(worldAnchor)
+        
         arView.scene.anchors.append(wallAnchor)
+    }
+    
+    // 更新
+    func updateWall(anchor: ARPlaneAnchor) {
+        
+        let x = arView.scene.anchors
+       
+        print("^^^^^^^^^^^^^^^")
+        print("x: \(x)")
+        
+        
+        
     }
 
     
@@ -246,15 +273,42 @@ extension ARTestViewController: ARSessionDelegate {
     }
     
     func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
-        if let planeAnchor = anchors as? [ARPlaneAnchor] {
-            print("==================")
+        if let planeAnchors = anchors as? [ARPlaneAnchor] {
+            
+           
             print("平面上書き")
-            print("anchors: \(anchors)")
+            print("anchors: \(planeAnchors.first)")
             
-            makeWallModel2(anchor: planeAnchor.first!)
-            
-            
-//            makeWallModel(anchor: planeAnchor.first!)
+            for anchor in anchors {
+                
+                for planeAnchor in arView.scene.anchors {
+                    if anchor.identifier == planeAnchor.anchorIdentifier {
+                        print("@@@@@@@@@@@@@@@@@@@")
+                        // エンティティ取り出し
+                        let name = planeAnchor.children.first
+                        let entity = planeAnchor.children.first as! ModelEntity
+                        
+                        
+                        
+                        // 壁を生成
+                        let wall = MeshResource.generatePlane(width: (planeAnchors.first?.extent.x)!, depth: (planeAnchors.first?.extent.z)!).contents
+                        
+//                        makeWallModel2(anchor: anchor as! ARPlaneAnchor)
+                        let x = entity.model?.mesh.replaceAsync(with: wall)
+                        
+                        print("scale: \(entity.scale)")
+                        print("children: \(entity.children)")
+                        print("children: \(entity.transform)")
+//                        print("x: \(x?.result)")
+                    } else {
+                        print("==================")
+                        print("anchor: \(planeAnchor.anchorIdentifier)")
+                }
+                
+                   
+                    
+                }
+            }
         }
     }
 }
