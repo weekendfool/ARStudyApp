@@ -39,8 +39,7 @@
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="tinted" title="２"/>
                                 <connections>
-                                    <action selector="tappedARButton2:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="aIC-qM-Zsh"/>
-                                    <action selector="tappedARButton:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="a2a-0A-PgL"/>
+                                    <action selector="tappedARButton2:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="2b2-0x-fwz"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="62K-er-V5C">

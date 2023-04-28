@@ -27,6 +27,7 @@ class ARTestViewController: UIViewController {
     
     var bulletModel = ModelEntity()
     var bulletAnthor = AnchorEntity()
+//    var wallAnchor = AnchorEntity()
     
     var wallEntity = ModelEntity()
     
@@ -52,7 +53,7 @@ class ARTestViewController: UIViewController {
         arView.debugOptions = [.showWorldOrigin, .showFeaturePoints]
         
         // 平面の発見
-        configuration.planeDetection = [.horizontal]
+        configuration.planeDetection = [.horizontal, .vertical]
         
         
         
@@ -80,6 +81,11 @@ class ARTestViewController: UIViewController {
         bulletModel.model?.materials = [unlitMaterial]
         
         //　物理的挙動の追加
+        // 物理衝突設定
+        let massProperties = PhysicsMassProperties(mass: 0)
+        bulletModel.physicsBody = PhysicsBodyComponent(massProperties: massProperties, material: nil, mode: .dynamic)
+         
+        bulletModel.generateCollisionShapes(recursive: false)
         
         bulletAnthor.addChild(bulletModel)
         arView.scene.anchors.append(bulletAnthor)
@@ -114,31 +120,34 @@ class ARTestViewController: UIViewController {
     }
     
     // 壁の生成
-    func makeWallModel(anchor: ARPlaneAnchor) {
-        // 大きさ
-        let size = anchor.extent
+    func makeWallModel() {
+        // アンカーの設置
+        let wallAnchor = AnchorEntity()
+        // アンカーの位置を設定
+        wallAnchor.position = simd_make_float3(0, 0, -1)
         // 色
-        let color = UIColor.systemRed.withAlphaComponent(0.5)
+        let color = UIColor.systemMint.withAlphaComponent(0.8)
         
-        var wallAnchor = AnchorEntity(anchor: anchor)
-        var wallEntity = ModelEntity()
-        
-//        let testAnchor = AnchorEntity(plane: .horizontal)
-//        let
-                
         
         // 壁を生成
-        let wall = MeshResource.generatePlane(width: size.x, height: size.z)
-//        wallEntity.transform
-        
+        let wallNode = MeshResource.generatePlane(width: 0.5, height: 0.5, cornerRadius: 0)
         // 3dコンテンツ
-        wallEntity = ModelEntity(mesh: wall)
+        wallEntity = ModelEntity(mesh: wallNode)
         
         let unlitMaterial = UnlitMaterial(color: color)
         wallEntity.model?.materials = [unlitMaterial]
         
+        //　物理的挙動の追加
+        // 物理衝突設定
+        let massProperties = PhysicsMassProperties(mass: 0)
+        wallEntity.physicsBody = PhysicsBodyComponent(massProperties: massProperties, material: nil, mode: .static)
+         
+        wallEntity.generateCollisionShapes(recursive: false)
+        
         wallAnchor.addChild(wallEntity)
         arView.scene.anchors.append(wallAnchor)
+        
+    
     }
     
     func makeWallModel2(anchor: ARPlaneAnchor) {
@@ -148,12 +157,6 @@ class ARTestViewController: UIViewController {
         let color = UIColor.systemRed.withAlphaComponent(0.5)
         
        
-        
-//        let wallAnchor = AnchorEntity(
-//            plane: .horizontal,
-//            classification: .any,
-//            minimumBounds: [0, 0]
-//        )
         var wallAnchor = AnchorEntity(anchor: anchor)
                 
         
@@ -166,7 +169,17 @@ class ARTestViewController: UIViewController {
         let unlitMaterial = UnlitMaterial(color: color)
         wallEntity.model?.materials = [unlitMaterial]
         
-        wallEntity.name = "ok"
+       // 物理衝突設定
+        wallEntity.physicsBody = PhysicsBodyComponent(
+            massProperties: .default,
+            material: .generate(),
+            mode:.static
+        )
+        
+        wallEntity.generateCollisionShapes(recursive: false)
+        
+        
+        
         
         print("$$$$$$$$$$$$$$$$")
         print("wall: \(wallAnchor.anchorIdentifier)")
@@ -181,7 +194,7 @@ class ARTestViewController: UIViewController {
         
         let x = arView.scene.anchors
     
-        let cha = x.first!.children as Entity
+        let cha = x.first!.children
        
         print("^^^^^^^^^^^^^^^")
         print("x: \(x)")
@@ -249,11 +262,16 @@ class ARTestViewController: UIViewController {
     }
     
     @IBAction func tappedARButton2(_ sender: Any) {
-        shoot2()
+        makeWallModel()
+        
     }
     
     @IBAction func tappedARButton3(_ sender: Any) {
-        lound()
+        
+        shoot2()
+//        lound()
+        
+    
     }
     
 }
@@ -267,52 +285,52 @@ extension ARTestViewController: ARSessionDelegate {
             print("平面発見")
             print("anchors: \(anchors)")
             
-            makeWallModel2(anchor: planeAnchor.first!)
+//            makeWallModel2(anchor: planeAnchor.first!)
         }
         
        
         
     }
     
-    func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
-        if let planeAnchors = anchors as? [ARPlaneAnchor] {
-            
-           
-            print("平面上書き")
-            print("anchors: \(planeAnchors.first)")
-            
-            for anchor in anchors {
-                
-                for planeAnchor in arView.scene.anchors {
-                    if anchor.identifier == planeAnchor.anchorIdentifier {
-                        print("@@@@@@@@@@@@@@@@@@@")
-                        // エンティティ取り出し
-                        let name = planeAnchor.children.first
-                        let entity = planeAnchor.children.first as! ModelEntity
-                        
-                        
-                        
-                        // 壁を生成
-                        let wall = MeshResource.generatePlane(width: (planeAnchors.first?.extent.x)!, depth: (planeAnchors.first?.extent.z)!).contents
-                        
-//                        makeWallModel2(anchor: anchor as! ARPlaneAnchor)
-                        let x = entity.model?.mesh.replaceAsync(with: wall)
-                        
-                        print("scale: \(entity.scale)")
-                        print("children: \(entity.children)")
-                        print("children: \(entity.transform)")
-//                        print("x: \(x?.result)")
-                    } else {
-                        print("==================")
-                        print("anchor: \(planeAnchor.anchorIdentifier)")
-                }
-                
-                   
-                    
-                }
-            }
-        }
-    }
+//    func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
+//        if let planeAnchors = anchors as? [ARPlaneAnchor] {
+//
+//
+//            print("平面上書き")
+//            print("anchors: \(planeAnchors.first)")
+//
+//            for anchor in anchors {
+//
+//                for planeAnchor in arView.scene.anchors {
+//                    if anchor.identifier == planeAnchor.anchorIdentifier {
+//                        print("@@@@@@@@@@@@@@@@@@@")
+//                        // エンティティ取り出し
+//                        let name = planeAnchor.children.first
+//                        let entity = planeAnchor.children.first as! ModelEntity
+//
+//
+//
+//                        // 壁を生成
+//                        let wall = MeshResource.generatePlane(width: (planeAnchors.first?.extent.x)!, depth: (planeAnchors.first?.extent.z)!).contents
+//
+////                        makeWallModel2(anchor: anchor as! ARPlaneAnchor)
+//                        let x = entity.model?.mesh.replaceAsync(with: wall)
+//
+//                        print("scale: \(entity.scale)")
+//                        print("children: \(entity.children)")
+//                        print("children: \(entity.transform)")
+////                        print("x: \(x?.result)")
+//                    } else {
+//                        print("==================")
+//                        print("anchor: \(planeAnchor.anchorIdentifier)")
+//                }
+//
+//
+//
+//                }
+//            }
+//        }
+//    }
 }
 
 
