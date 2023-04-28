@@ -180,6 +180,8 @@ class ARTestViewController: UIViewController {
     func updateWall(anchor: ARPlaneAnchor) {
         
         let x = arView.scene.anchors
+    
+        let cha = x.first!.children as Entity
        
         print("^^^^^^^^^^^^^^^")
         print("x: \(x)")
