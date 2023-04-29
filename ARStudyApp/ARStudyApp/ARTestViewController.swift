@@ -83,10 +83,10 @@ class ARTestViewController: UIViewController {
         //　物理的挙動の追加
         // 物理衝突設定
         let massProperties = PhysicsMassProperties(mass: 0)
-        bulletModel.physicsBody = PhysicsBodyComponent(massProperties: massProperties, material: nil, mode: .dynamic)
-         
+        bulletModel.physicsBody = PhysicsBodyComponent(massProperties: massProperties, material: nil, mode: .static)
+//
         bulletModel.generateCollisionShapes(recursive: false)
-        
+//
         bulletAnthor.addChild(bulletModel)
         arView.scene.anchors.append(bulletAnthor)
     }
@@ -96,7 +96,7 @@ class ARTestViewController: UIViewController {
         
         
         // カメラ座標mの三メートル先
-        let infrontOfCamera = SIMD3<Float>(x: 0, y: 0, z: -5)
+        let infrontOfCamera = SIMD3<Float>(x: 0, y: 0, z: -3)
         
         // カメラ座標　-> アンカー座標
         let bulletPos = bulletAnthor.convert(position: infrontOfCamera, to: nil)
@@ -108,7 +108,7 @@ class ARTestViewController: UIViewController {
         let animeMove = bulletAnthor.move(
             to: movePos,
             relativeTo: nil,
-            duration: 1.5,
+            duration: 3,
             timingFunction: .linear
         )
         
@@ -128,23 +128,36 @@ class ARTestViewController: UIViewController {
         // 色
         let color = UIColor.systemMint.withAlphaComponent(0.8)
         
-        
         // 壁を生成
-        let wallNode = MeshResource.generatePlane(width: 0.5, height: 0.5, cornerRadius: 0)
-        // 3dコンテンツ
-        wallEntity = ModelEntity(mesh: wallNode)
+
+        let horizontalPlane = ModelEntity(mesh: .generatePlane(width: 0.5, height: 0.5, cornerRadius: 0),
+                                                     materials: [SimpleMaterial(color: .systemMint,
+                                                     isMetallic: true)])
         
-        let unlitMaterial = UnlitMaterial(color: color)
-        wallEntity.model?.materials = [unlitMaterial]
+        horizontalPlane.physicsBody = PhysicsBodyComponent(massProperties: .default, // 質量
+                                                           material: .generate(friction: 0.1, // 摩擦係数
+                                                                               restitution: 0.1), // 衝突の運動エネルギーの保存率
+                                                           mode: .kinematic)
+         // .kinematic モードで物理ボディをつける
+
+        horizontalPlane.generateCollisionShapes(recursive: false)
+//        let wallNode = MeshResource.generatePlane(width: 0.5, height: 0.5, cornerRadius: 0)
+        // 3dコンテンツ
+//        wallEntity = ModelEntity(mesh: horizontalPlane)
+        
+//        let unlitMaterial = UnlitMaterial(color: color)
+//        wallEntity.model?.materials = [unlitMaterial]
         
         //　物理的挙動の追加
         // 物理衝突設定
-        let massProperties = PhysicsMassProperties(mass: 0)
-        wallEntity.physicsBody = PhysicsBodyComponent(massProperties: massProperties, material: nil, mode: .static)
-         
-        wallEntity.generateCollisionShapes(recursive: false)
+//        let massProperties = PhysicsMassProperties(mass: 100)
+//        wallEntity.physicsBody = PhysicsBodyComponent(massProperties: massProperties, material: nil, mode: .static)
+//
+//        wallEntity.generateCollisionShapes(recursive: true)
+//
+        worldAnchor.addChild(horizontalPlane)
         
-        wallAnchor.addChild(wallEntity)
+        wallAnchor.addChild(horizontalPlane)
         arView.scene.anchors.append(wallAnchor)
         
     
@@ -227,26 +240,85 @@ class ARTestViewController: UIViewController {
     }
     
     // 発射
-//    func shoot() {
-//        let newPosition = simd_make_float3(
-//            worldAnchor.transform.translation.x + 0.05,
-//            worldAnchor.transform.translation.y,
-//            worldAnchor.transform.translation.z
-//            )
+    func shoot() {
+        let newPosition = simd_make_float3(
+            worldAnchor.transform.translation.x,
+            worldAnchor.transform.translation.y,
+            worldAnchor.transform.translation.z + 0.5
+            )
+
+        let controller = bulletModel.move(
+            to: Transform(scale: simd_make_float3(1, 1, 1),
+                          rotation: worldAnchor.orientation,
+                          translation: newPosition),
+            relativeTo: nil,
+            duration: 5,
+            timingFunction: .linear
+            )
+
+
+        print("----------------------")
+
+    }
+    
+    func shoot3() {
+        
+        let bulletAnthor = AnchorEntity()
+
+        // 大きさ
+        let size: Float = 0.1
+        // 色
+        let color = UIColor.systemBlue.withAlphaComponent(0.8)
+        
+        
+        // 球体を生成
+        let bulletNode = MeshResource.generateBox(size: size)
+        
+        // 3dコンテンツ
+        let bulletModel = ModelEntity(mesh: bulletNode)
+        
+        let unlitMaterial = UnlitMaterial(color: color)
+        bulletModel.model?.materials = [unlitMaterial]
+        
+        //　物理的挙動の追加
+        // 物理衝突設定
+        let massProperties = PhysicsMassProperties(mass: 100)
+        bulletModel.physicsBody = PhysicsBodyComponent(massProperties: massProperties, material: nil, mode: .kinematic)
 //
-//        let controller = bulletModel.move(
-//            to: Transform(scale: simd_make_float3(1, 1, 1),
-//                          rotation: worldAnchor.orientation,
-//                          translation: newPosition),
-//            relativeTo: nil,
-//            duration: 5,
-//            timingFunction: .linear
-//            )
+        bulletModel.generateCollisionShapes(recursive: true)
+        
+//        worldAnchor.addChild(bulletModel)
 //
-//
-//        print("----------------------")
-//
-//    }
+        bulletAnthor.addChild(bulletModel)
+        arView.scene.anchors.append(bulletAnthor)
+    
+    // 弾丸
+        
+        
+        // カメラ座標mの三メートル先
+        let infrontOfCamera = SIMD3<Float>(x: 0, y: 0, z: -3)
+        
+        // カメラ座標　-> アンカー座標
+        let bulletPos = bulletAnthor.convert(position: infrontOfCamera, to: nil)
+        
+        // ３d座標を行列に変換
+        let movePos = float4x4.init(translation: bulletPos)
+        
+        // 移動: アンカーを動かすともの全てが動く,モデルだけ動かすと二つに増える
+        let animeMove = bulletAnthor.move(
+            to: movePos,
+            relativeTo: nil,
+            duration: 3,
+            timingFunction: .linear
+        )
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.6) {
+            bulletAnthor.removeFromParent()
+                }
+        
+        print("------------------")
+    }
+    
     
    
     
@@ -268,7 +340,7 @@ class ARTestViewController: UIViewController {
     
     @IBAction func tappedARButton3(_ sender: Any) {
         
-        shoot2()
+        shoot3()
 //        lound()
         
     
