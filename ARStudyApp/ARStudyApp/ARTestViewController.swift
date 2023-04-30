@@ -135,9 +135,9 @@ class ARTestViewController: UIViewController {
                                                      isMetallic: true)])
         
         horizontalPlane.physicsBody = PhysicsBodyComponent(massProperties: .default, // 質量
-                                                           material: .generate(friction: 0.1, // 摩擦係数
+                                                           material: .generate(friction: 1, // 摩擦係数
                                                                                restitution: 0.1), // 衝突の運動エネルギーの保存率
-                                                           mode: .kinematic)
+                                                           mode: .static)
          // .kinematic モードで物理ボディをつける
 
         horizontalPlane.generateCollisionShapes(recursive: false)
@@ -145,8 +145,8 @@ class ARTestViewController: UIViewController {
         // 3dコンテンツ
 //        wallEntity = ModelEntity(mesh: horizontalPlane)
         
-//        let unlitMaterial = UnlitMaterial(color: color)
-//        wallEntity.model?.materials = [unlitMaterial]
+        let unlitMaterial = UnlitMaterial(color: color)
+        horizontalPlane.model?.materials = [unlitMaterial]
         
         //　物理的挙動の追加
         // 物理衝突設定
@@ -270,22 +270,34 @@ class ARTestViewController: UIViewController {
         // 色
         let color = UIColor.systemBlue.withAlphaComponent(0.8)
         
+        let bulletModel = ModelEntity(mesh: .generateBox(size: size),
+                                                     materials: [SimpleMaterial(color: .systemBlue,
+                                                     isMetallic: true)])
+        
+        bulletModel.physicsBody = PhysicsBodyComponent(massProperties: .default, // 質量
+                                                           material: .generate(friction: 0.1, // 摩擦係数
+                                                                               restitution: 1), // 衝突の運動エネルギーの保存率
+                                                           mode: .kinematic)
+         // .kinematic モードで物理ボディをつける
+
+        bulletModel.generateCollisionShapes(recursive: false)
+        
         
         // 球体を生成
-        let bulletNode = MeshResource.generateBox(size: size)
-        
-        // 3dコンテンツ
-        let bulletModel = ModelEntity(mesh: bulletNode)
-        
+//        let bulletNode = MeshResource.generateBox(size: size)
+//
+//        // 3dコンテンツ
+//        let bulletModel = ModelEntity(mesh: bulletNode)
+//
         let unlitMaterial = UnlitMaterial(color: color)
         bulletModel.model?.materials = [unlitMaterial]
-        
-        //　物理的挙動の追加
-        // 物理衝突設定
-        let massProperties = PhysicsMassProperties(mass: 100)
-        bulletModel.physicsBody = PhysicsBodyComponent(massProperties: massProperties, material: nil, mode: .kinematic)
-//
-        bulletModel.generateCollisionShapes(recursive: true)
+
+//        //　物理的挙動の追加
+//        // 物理衝突設定
+//        let massProperties = PhysicsMassProperties(mass: 100)
+//        bulletModel.physicsBody = PhysicsBodyComponent(massProperties: massProperties, material: nil, mode: .kinematic)
+////
+//        bulletModel.generateCollisionShapes(recursive: true)
         
 //        worldAnchor.addChild(bulletModel)
 //
