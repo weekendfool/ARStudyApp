@@ -37,6 +37,7 @@ class ARTestViewController: UIViewController {
         super.viewDidLoad()
 
         arView.session.delegate = self
+        arView.environment.sceneUnderstanding.options = [.physics, .collision]
         
         
         setup()
@@ -155,7 +156,9 @@ class ARTestViewController: UIViewController {
 //
 //        wallEntity.generateCollisionShapes(recursive: true)
 //
+        worldAnchor.addChild(wallAnchor)
         worldAnchor.addChild(horizontalPlane)
+        
         
         wallAnchor.addChild(horizontalPlane)
         arView.scene.anchors.append(wallAnchor)
@@ -301,6 +304,7 @@ class ARTestViewController: UIViewController {
         
 //        worldAnchor.addChild(bulletModel)
 //
+        worldAnchor.addChild(bulletAnthor)
         bulletAnthor.addChild(bulletModel)
         arView.scene.anchors.append(bulletAnthor)
     
