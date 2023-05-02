@@ -9,6 +9,7 @@ import UIKit
 import RealityKit
 import ARKit
 import MultipeerConnectivity
+import Combine
 
 class ARTestViewController: UIViewController {
 
@@ -86,7 +87,7 @@ class ARTestViewController: UIViewController {
         let massProperties = PhysicsMassProperties(mass: 0)
         bulletModel.physicsBody = PhysicsBodyComponent(massProperties: massProperties, material: nil, mode: .static)
 //
-        bulletModel.generateCollisionShapes(recursive: false)
+        bulletModel.generateCollisionShapes(recursive: true)
 //
         bulletAnthor.addChild(bulletModel)
         arView.scene.anchors.append(bulletAnthor)
@@ -130,34 +131,22 @@ class ARTestViewController: UIViewController {
         let color = UIColor.systemMint.withAlphaComponent(0.8)
         
         // 壁を生成
-
-        let horizontalPlane = ModelEntity(mesh: .generatePlane(width: 0.5, height: 0.5, cornerRadius: 0),
-                                                     materials: [SimpleMaterial(color: .systemMint,
-                                                     isMetallic: true)])
+        let horizontalPlane = ModelEntity(mesh: .generatePlane(width: 0.5, height: 0.5, cornerRadius: 0))
         
-        horizontalPlane.physicsBody = PhysicsBodyComponent(massProperties: .default, // 質量
-                                                           material: .generate(friction: 1, // 摩擦係数
-                                                                               restitution: 0.1), // 衝突の運動エネルギーの保存率
-                                                           mode: .static)
-         // .kinematic モードで物理ボディをつける
+        horizontalPlane.physicsBody = PhysicsBodyComponent(
+            massProperties: .default, // 質量
+                material: .generate(friction: 1, // 摩擦係数
+                                    restitution: 0.1), // 衝突の運動エネルギーの保存率
+                mode: .static
+        )
 
-        horizontalPlane.generateCollisionShapes(recursive: false)
-//        let wallNode = MeshResource.generatePlane(width: 0.5, height: 0.5, cornerRadius: 0)
-        // 3dコンテンツ
-//        wallEntity = ModelEntity(mesh: horizontalPlane)
+        horizontalPlane.generateCollisionShapes(recursive: true)
         
         let unlitMaterial = UnlitMaterial(color: color)
         horizontalPlane.model?.materials = [unlitMaterial]
-        
-        //　物理的挙動の追加
-        // 物理衝突設定
-//        let massProperties = PhysicsMassProperties(mass: 100)
-//        wallEntity.physicsBody = PhysicsBodyComponent(massProperties: massProperties, material: nil, mode: .static)
-//
-//        wallEntity.generateCollisionShapes(recursive: true)
-//
-        worldAnchor.addChild(wallAnchor)
-        worldAnchor.addChild(horizontalPlane)
+
+//        worldAnchor.addChild(wallAnchor)
+//        worldAnchor.addChild(horizontalPlane)
         
         
         wallAnchor.addChild(horizontalPlane)
@@ -283,7 +272,7 @@ class ARTestViewController: UIViewController {
                                                            mode: .kinematic)
          // .kinematic モードで物理ボディをつける
 
-        bulletModel.generateCollisionShapes(recursive: false)
+        bulletModel.generateCollisionShapes(recursive: true)
         
         
         // 球体を生成
