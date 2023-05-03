@@ -9,7 +9,7 @@ import UIKit
 import RealityKit
 import ARKit
 import MultipeerConnectivity
-import Combine
+//import Combine
 
 class ARTestViewController: UIViewController {
 
@@ -155,6 +155,8 @@ class ARTestViewController: UIViewController {
     
     }
     
+   
+    
     func makeWallModel2(anchor: ARPlaneAnchor) {
         // 大きさ
         let size = anchor.extent
@@ -194,6 +196,35 @@ class ARTestViewController: UIViewController {
         arView.scene.anchors.append(wallAnchor)
     }
     
+    
+    func makeWallModel3() {
+        // アンカーの設置
+        let wallAnchor = AnchorEntity()
+        // アンカーの位置を設定
+        wallAnchor.position = simd_make_float3(0, 0, -1)
+        // 色
+        let color = UIColor.systemMint.withAlphaComponent(0.8)
+        
+        let horizontalPlane = ModelEntity(mesh: .generateBox(size: [0.2, 0.2, 0.003]),
+                                                     materials: [SimpleMaterial(color: color,
+                                                     isMetallic: false)])
+
+        horizontalPlane.physicsBody = PhysicsBodyComponent(massProperties: .default, // 質量
+                                                           material: .generate(friction: 0.1, // 摩擦係数
+                                                                               restitution: 0.1), // 衝突の運動エネルギーの保存率
+                                                           mode: .static)
+         // .kinematic モードで物理ボディをつける
+
+        horizontalPlane.generateCollisionShapes(recursive: false)
+        
+        horizontalPlane.position = simd_make_float3(0, 0, -0.5)
+         // 衝突形状をつける。子ノードまで recursive　につけることも可能
+
+        worldAnchor.addChild(horizontalPlane)
+
+    
+    }
+    
     func makeSample() {
         
         let horizontalPlane = ModelEntity(mesh: .generateBox(size: [0.2,0.003,0.2]),
@@ -224,6 +255,8 @@ class ARTestViewController: UIViewController {
              // .dynamic モードで物理ボディをつける
 
             physicalSphere.generateCollisionShapes(recursive: false)
+            physicalSphere.position = SIMD3<Float>(x: 0, y: 0.5, z: 0)
+            
             // 衝突形状をつける
             worldAnchor.addChild(physicalSphere)
         }
@@ -376,7 +409,7 @@ class ARTestViewController: UIViewController {
     }
     
     @IBAction func tappedARButton2(_ sender: Any) {
-        makeWallModel()
+        makeWallModel3()
         
     }
     
