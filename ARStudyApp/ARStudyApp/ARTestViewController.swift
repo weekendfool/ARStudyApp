@@ -194,6 +194,43 @@ class ARTestViewController: UIViewController {
         arView.scene.anchors.append(wallAnchor)
     }
     
+    func makeSample() {
+        
+        let horizontalPlane = ModelEntity(mesh: .generateBox(size: [0.2,0.003,0.2]),
+                                                     materials: [SimpleMaterial(color: .white,
+                                                     isMetallic: true)])
+
+        horizontalPlane.physicsBody = PhysicsBodyComponent(massProperties: .default, // 質量
+                                                           material: .generate(friction: 0.1, // 摩擦係数
+                                                                               restitution: 0.1), // 衝突の運動エネルギーの保存率
+                                                           mode: .kinematic)
+         // .kinematic モードで物理ボディをつける
+
+        horizontalPlane.generateCollisionShapes(recursive: false)
+         // 衝突形状をつける。子ノードまで recursive　につけることも可能
+
+        worldAnchor.addChild(horizontalPlane)
+
+        // 添付Gif の verticalPlane も同様です
+
+        let colors:[UIColor] = [.red,.orange,.magenta,.yellow,.purple,.white]
+        for index in 0...5 {
+            let physicalSphere = ModelEntity(mesh: .generateSphere(radius: 0.01),
+                                             materials: [SimpleMaterial(color: colors[index],
+                                             isMetallic: true)])
+            physicalSphere.physicsBody = PhysicsBodyComponent(massProperties: .default,
+                                                           material: .generate(),
+                                                           mode: .dynamic)
+             // .dynamic モードで物理ボディをつける
+
+            physicalSphere.generateCollisionShapes(recursive: false)
+            // 衝突形状をつける
+            worldAnchor.addChild(physicalSphere)
+        }
+                
+        arView.scene.anchors.append(worldAnchor)
+    }
+    
     // 更新
     func updateWall(anchor: ARPlaneAnchor) {
         
@@ -333,8 +370,8 @@ class ARTestViewController: UIViewController {
     }
 
     @IBAction func tappedARButton(_ sender: Any) {
-       
-        makeBullet()
+        makeSample()
+//        makeBullet()
         
     }
     
