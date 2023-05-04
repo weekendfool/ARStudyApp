@@ -394,7 +394,54 @@ class ARTestViewController: UIViewController {
         print("------------------")
     }
     
+    func shoot4() {
+        
+        let bulletAnthor = AnchorEntity()
+
+        // 大きさ
+        let size: Float = 0.1
+        // 色
+        let color = UIColor.systemBlue.withAlphaComponent(0.8)
+        
+        let bullet = ModelEntity(mesh: .generateBox(size: size),
+                                                     materials: [SimpleMaterial(color: color,
+                                                     isMetallic: false)])
+
+        bullet.physicsBody = PhysicsBodyComponent(massProperties: .default, // 質量
+                                                           material: .generate(friction: 0, // 摩擦係数
+                                                                               restitution: 0.1), // 衝突の運動エネルギーの保存率
+                                                  mode: .kinematic)
+         // .kinematic モードで物理ボディをつける
+
+        bullet.generateCollisionShapes(recursive: true)
+         // 衝突形状をつける。子ノードまで recursive　につけることも可能
+
+        worldAnchor.addChild(bullet)
     
+    // 弾丸
+        // カメラ座標mの三メートル先
+        let infrontOfCamera = SIMD3<Float>(x: 0, y: 0, z: -3)
+        // カメラ座標　-> アンカー座標
+        let bulletPos = bulletAnthor.convert(position: infrontOfCamera, to: nil)
+        
+        let origen = SIMD3<Float>(x: 0, y: 0, z: 0)
+
+        // かかる力
+        let force = SIMD3<Float>(x: 300, y: 300, z: 300)
+        
+        bullet.addForce(force, relativeTo: nil)
+//        bullet.addForce(origen, at: force, relativeTo: nil)
+        
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 1.6) {
+//            bullet.removeFromParent()
+//                }
+        // 衝突形状をつける
+//        worldAnchor.addChild(bullet)
+    
+            
+//    arView.scene.anchors.append(worldAnchor)
+        print("------------------")
+    }
    
     
     // 座標取得
@@ -415,7 +462,7 @@ class ARTestViewController: UIViewController {
     
     @IBAction func tappedARButton3(_ sender: Any) {
         
-        shoot3()
+        shoot4()
 //        lound()
         
     
