@@ -442,6 +442,32 @@ class ARTestViewController: UIViewController {
 //    arView.scene.anchors.append(worldAnchor)
         print("------------------")
     }
+    
+    func shoot5() {
+        let horizontalPlane = ModelEntity(mesh: .generateBox(size: [0.2,0.003,0.2]),
+                                                     materials: [SimpleMaterial(color: .white,
+                                                     isMetallic: false)])
+
+        horizontalPlane.physicsBody = PhysicsBodyComponent(massProperties: .default, // 質量
+                                                           material: .generate(friction: 0.1, // 摩擦係数
+                                                                               restitution: 0.1), // 衝突の運動エネルギーの保存率
+                                                           mode: .kinematic)
+         // .kinematic モードで物理ボディをつける
+
+        horizontalPlane.generateCollisionShapes(recursive: true)
+         // 衝突形状をつける。子ノードまで recursive　につけることも可能
+
+        
+
+        
+        // かかる力
+        let force = SIMD3<Float>(x: 0, y: 0, z: 300)
+        horizontalPlane.applyLinearImpulse(force, relativeTo: worldAnchor)
+        
+        worldAnchor.addChild(horizontalPlane)
+                
+        arView.scene.anchors.append(worldAnchor)
+    }
    
     
     // 座標取得
@@ -462,7 +488,7 @@ class ARTestViewController: UIViewController {
     
     @IBAction func tappedARButton3(_ sender: Any) {
         
-        shoot4()
+        shoot5()
 //        lound()
         
     
