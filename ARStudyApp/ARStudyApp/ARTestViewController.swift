@@ -35,6 +35,10 @@ class ARTestViewController: UIViewController {
     let horizontalPlane = ModelEntity(mesh: .generateBox(size: [0.2,0.003,0.2]),
                                                  materials: [SimpleMaterial(color: .white,
                                                  isMetallic: false)])
+    
+    let boxEntity = ModelEntity(mesh: .generateBox(size: [0.1, 0.1, 0.1]),
+                                materials: [SimpleMaterial(color: .systemBlue.withAlphaComponent(0.9),
+                                                           isMetallic: false)])
 
     
     // MARK: - ライフサイクル
@@ -453,18 +457,24 @@ class ARTestViewController: UIViewController {
 //                                                     materials: [SimpleMaterial(color: .white,
 //                                                     isMetallic: false)])
 
-        horizontalPlane.physicsBody = PhysicsBodyComponent(massProperties: .default, // 質量
-                                                           material: .generate(friction: 0.1, // 摩擦係数
+        // 重さをゼロに設定
+        let box = ShapeResource.generateBox(width: 0.1, height: 0.1, depth: 0.1)
+        let shape = PhysicsMassProperties(shape: box, mass: 0.0)
+        
+//        horizontalPlane.physicsBody = PhysicsBodyComponent(shapes: box, mass: <#T##Float#>)
+        
+        boxEntity.physicsBody = PhysicsBodyComponent(massProperties: shape, // 質量
+                                                           material: .generate(friction: 0.0, // 摩擦係数
                                                                                restitution: 0.1), // 衝突の運動エネルギーの保存率
-                                                           mode: .kinematic)
+                                                           mode: .dynamic)
          // .kinematic モードで物理ボディをつける
 
-        horizontalPlane.generateCollisionShapes(recursive: true)
+        boxEntity.generateCollisionShapes(recursive: true)
          // 衝突形状をつける。子ノードまで recursive　につけることも可能
 
         
 
-        worldAnchor.addChild(horizontalPlane)
+        worldAnchor.addChild(boxEntity)
                 
         arView.scene.anchors.append(worldAnchor)
         
@@ -472,9 +482,9 @@ class ARTestViewController: UIViewController {
    
     func shoot5() {
         // かかる力
-        let force = SIMD3<Float>(x: 0, y: 300, z: 300)
-        horizontalPlane.addForce(force, relativeTo: worldAnchor)
-//        horizontalPlane.applyLinearImpulse(force, relativeTo: worldAnchor)
+        let force = SIMD3<Float>(x: 0, y: 0, z: -30)
+//        boxEntity.addForce(force, relativeTo: worldAnchor)
+        boxEntity.applyLinearImpulse(force, relativeTo: worldAnchor)
         
        print("shoooooooot!")
     }
