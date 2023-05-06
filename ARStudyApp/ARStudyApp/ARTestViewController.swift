@@ -9,7 +9,7 @@ import UIKit
 import RealityKit
 import ARKit
 import MultipeerConnectivity
-//import Combine
+import Combine
 
 class ARTestViewController: UIViewController {
 
@@ -31,6 +31,11 @@ class ARTestViewController: UIViewController {
 //    var wallAnchor = AnchorEntity()
     
     var wallEntity = ModelEntity()
+    
+    let horizontalPlane = ModelEntity(mesh: .generateBox(size: [0.2,0.003,0.2]),
+                                                 materials: [SimpleMaterial(color: .white,
+                                                 isMetallic: false)])
+
     
     // MARK: - ライフサイクル
     
@@ -443,10 +448,10 @@ class ARTestViewController: UIViewController {
         print("------------------")
     }
     
-    func shoot5() {
-        let horizontalPlane = ModelEntity(mesh: .generateBox(size: [0.2,0.003,0.2]),
-                                                     materials: [SimpleMaterial(color: .white,
-                                                     isMetallic: false)])
+    func setHorizontalPlane() {
+//        let horizontalPlane = ModelEntity(mesh: .generateBox(size: [0.2,0.003,0.2]),
+//                                                     materials: [SimpleMaterial(color: .white,
+//                                                     isMetallic: false)])
 
         horizontalPlane.physicsBody = PhysicsBodyComponent(massProperties: .default, // 質量
                                                            material: .generate(friction: 0.1, // 摩擦係数
@@ -459,16 +464,20 @@ class ARTestViewController: UIViewController {
 
         
 
-        
-        // かかる力
-        let force = SIMD3<Float>(x: 0, y: 0, z: 300)
-        horizontalPlane.applyLinearImpulse(force, relativeTo: worldAnchor)
-        
         worldAnchor.addChild(horizontalPlane)
                 
         arView.scene.anchors.append(worldAnchor)
+        
     }
    
+    func shoot5() {
+        // かかる力
+        let force = SIMD3<Float>(x: 0, y: 300, z: 300)
+        horizontalPlane.addForce(force, relativeTo: worldAnchor)
+//        horizontalPlane.applyLinearImpulse(force, relativeTo: worldAnchor)
+        
+       print("shoooooooot!")
+    }
     
     // 座標取得
     func getPosition() {
@@ -476,8 +485,10 @@ class ARTestViewController: UIViewController {
     }
 
     @IBAction func tappedARButton(_ sender: Any) {
-        makeSample()
+//        makeSample()
 //        makeBullet()
+        
+        setHorizontalPlane()
         
     }
     
