@@ -22,7 +22,7 @@ class ARTestViewController: UIViewController {
     @IBOutlet weak var arButton3: UIButton!
     // MARK: - 変数
     let worldAnchor: AnchorEntity = AnchorEntity()
-    
+    var planeAnchor: AnchorEntity?
 //    let rootAnchor = AnchorEntity()
 //    let box = ModelEntity(mesh: .generateBox(size: simd_make_float3(0.3, 0.3, 0.3)))
     
@@ -32,10 +32,13 @@ class ARTestViewController: UIViewController {
     
     var wallEntity = ModelEntity()
     
+    var virtualObjects: [VirtualObject] = []
+    
     let horizontalPlane = ModelEntity(mesh: .generateBox(size: [0.2,0.003,0.2]),
                                                  materials: [SimpleMaterial(color: .white,
                                                  isMetallic: false)])
     
+    let boxAnchor = AnchorEntity()
     let boxEntity = ModelEntity(mesh: .generateBox(size: [0.1, 0.1, 0.1]),
                                 materials: [SimpleMaterial(color: .systemBlue.withAlphaComponent(0.9),
                                                            isMetallic: false)])
@@ -47,13 +50,20 @@ class ARTestViewController: UIViewController {
         super.viewDidLoad()
 
         arView.session.delegate = self
-        arView.environment.sceneUnderstanding.options = [.physics, .collision]
         
+        // タップジェスチャーを設定する
+        let tap = UITapGestureRecognizer(target: self,
+                                         action: #selector(handleTap(_:)))
+        arView.addGestureRecognizer(tap)
         
         setup()
+      
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         
-//        makeBoxView()
-        
+        resetTracking()
     }
     
     // MARK: - 関数
@@ -66,13 +76,74 @@ class ARTestViewController: UIViewController {
         // 平面の発見
         configuration.planeDetection = [.horizontal, .vertical]
         
+        // シーン再構築を有効化する
+        if ARWorldTrackingConfiguration.supportsSceneReconstruction(.mesh) {
+            configuration.sceneReconstruction = .mesh
+        }
+        
+        arView.environment.sceneUnderstanding.options = [.physics,
+                                                         .occlusion,
+                                                         .collision,
+                                                         .receivesLighting]
         
         
-        arView.session.run(configuration)
-        arView.scene.addAnchor(worldAnchor)
+        arView.translatesAutoresizingMaskIntoConstraints = false
+        // セッションを開始する
+        arView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
+        
+//        arView.session.run(configuration)
+//        arView.scene.addAnchor(worldAnchor)
+        
+       
+        
+        // 平面を追加する
+        planeAnchor = addPlane()
+        
+        // 球を2つ配置する
+//        virtualObjects.append(addVirtualObject(name: "Sphere",
+//                                               nameExtension: "usdz",
+//                                               position: [-0.015, 0.4, 0.0],
+//                                               plane: planeAnchor!))
     }
     
-   
+    // ARセッションをリセットする
+    func resetTracking() {
+        // シーン再構築されたメッシュに対して、コリジョンなどを適用する
+        arView.environment.sceneUnderstanding.options = [.physics,
+                                                         .occlusion,
+                                                         .collision,
+                                                         .receivesLighting]
+        
+        let config = ARWorldTrackingConfiguration()
+        
+        // シーン再構築を有効化する
+        if ARWorldTrackingConfiguration.supportsSceneReconstruction(.mesh) {
+            config.sceneReconstruction = .mesh
+        }
+        
+        // 環境テクスチャーマッピングを有効化する
+        config.environmentTexturing = .automatic
+        
+        // 水平面を検出する
+        config.planeDetection = [.horizontal]
+        // セッションを開始する
+        arView.session.run(config, options: [.removeExistingAnchors, .resetTracking])
+        
+        // 平面を追加する
+        planeAnchor = addPlane()
+        
+        // 球を2つ配置する
+        virtualObjects.append(addVirtualObject(name: "Sphere",
+                                               nameExtension: "usdz",
+                                               position: [-0.015, 0.4, 0.0],
+                                               plane: planeAnchor!))
+        virtualObjects.append(addVirtualObject(name: "Sphere",
+                                               nameExtension: "usdz",
+                                               position: [0.015, 0.4, 0.0],
+                                               plane: planeAnchor!))
+    }
+    
+    
     
     // 弾丸の生成
     func makeBullet() {
@@ -471,10 +542,10 @@ class ARTestViewController: UIViewController {
 
         boxEntity.generateCollisionShapes(recursive: true)
          // 衝突形状をつける。子ノードまで recursive　につけることも可能
-
+        boxAnchor.addChild(boxEntity)
         
 
-        worldAnchor.addChild(boxEntity)
+        worldAnchor.addChild(boxAnchor)
                 
         arView.scene.anchors.append(worldAnchor)
         
@@ -483,33 +554,166 @@ class ARTestViewController: UIViewController {
     func shoot5() {
         // かかる力
         let force = SIMD3<Float>(x: 0, y: 0, z: -30)
-//        boxEntity.addForce(force, relativeTo: worldAnchor)
-        boxEntity.applyLinearImpulse(force, relativeTo: worldAnchor)
+        boxEntity.addForce(force, relativeTo: nil)
+        boxEntity.applyLinearImpulse(force, relativeTo: nil)
         
        print("shoooooooot!")
     }
     
-    // 座標取得
-    func getPosition() {
+    func shoot6() {
+        // 加える衝撃の大きさ
+        var impulse: SIMD3<Float> = [0.0, 0.0, -0.5]
         
+        // カメラの向きになるように回転する
+        let cameraOrientation = arView.cameraTransform.rotation
+        impulse = cameraOrientation.act(impulse)
+        
+        // モデルに衝撃を加える
+        boxEntity.applyLinearImpulse(impulse,
+                                            relativeTo: nil)
+        
+        // 衝撃による回転の大きさ
+        var torque: SIMD3<Float> = [-0.2, 0.0, 0.0]
+        
+        // カメラの向きになるように回転する
+        torque = cameraOrientation.act(torque)
+        
+        // 回転する衝撃を加える
+        boxEntity.applyAngularImpulse(torque, relativeTo: nil)
     }
+    
+    
+    // タップジェスチャーの処理
+    @objc func handleTap(_ tap: UIGestureRecognizer) {
+        // ジェスチャー完了時のみ処理する
+        guard tap.state == .ended else {
+            return
+        }
+        
+        // タップされたモデルエンティティを調べる
+        let location = tap.location(in: arView)
+        let results = arView.hitTest(location)
+        
+        let tappedObj: [VirtualObject] = virtualObjects.filter { obj in
+            results.contains { $0.entity == obj.modelEntity }
+        }
+        
+        tappedObj.forEach() { tapVirtualObject($0) }
+        
+        print("11111111111111")
+    }
+    
+    // ファイルからコンテンツ読み込んで配置する
+        func addVirtualObject(name: String,
+                              nameExtension: String,
+                              position: SIMD3<Float>,
+                              plane: AnchorEntity) -> VirtualObject {
+            // ファイルを読み込んで配置する
+            let obj = VirtualObject(modelAnchor: plane)
+            obj.loadModel(name: name, nameExtension: nameExtension) { successed in
+                guard successed else {
+                    return
+                }
+                
+                // 物理情報を設定する
+                let model = obj.modelEntity
+                model?.physicsBody = PhysicsBodyComponent(massProperties: .default,
+                                                          material: .default,
+                                                          mode: .static)
+                
+                // コリジョンを設定する
+                model?.generateCollisionShapes(recursive: true)
+                
+                // 位置を調整する
+                model?.position = position
+            }
+            
+            print("222222222222222222")
+        
+            
+            return obj
+        }
+    
+    // 仮想コンテンツのタップ処理
+    func tapVirtualObject(_ obj: VirtualObject) {
+        // 加える衝撃の大きさ
+        var impulse: SIMD3<Float> = [0.0, 0.0, -0.5]
+        
+        // カメラの向きになるように回転する
+        let cameraOrientation = arView.cameraTransform.rotation
+        impulse = cameraOrientation.act(impulse)
+        
+        // モデルに衝撃を加える
+        obj.modelEntity?.applyLinearImpulse(impulse,
+                                            relativeTo: nil)
+        
+        // 衝撃による回転の大きさ
+        var torque: SIMD3<Float> = [-0.2, 0.0, 0.0]
+        
+        // カメラの向きになるように回転する
+        torque = cameraOrientation.act(torque)
+        
+        // 回転する衝撃を加える
+        obj.modelEntity?.applyAngularImpulse(torque, relativeTo: nil)
+    }
+    
+    func addPlane() -> AnchorEntity {
+        // アンカーエンティティを作成する
+        let anchor = AnchorEntity(plane: .horizontal,
+                                  classification: .any,
+                                  minimumBounds: [0.4, 0.4])
+        arView.scene.addAnchor(anchor)
+        
+        // 平面メッシュを生成
+        let mesh = MeshResource.generatePlane(width: 0.4, depth: 0.4)
+        
+        // 実際の平面をそのまま表示し、オクルージョンだけを行う
+        let material = OcclusionMaterial(receivesDynamicLighting: true)
+        
+        // モデルを作成
+        let model = ModelEntity(mesh: mesh, materials: [material])
+        
+        // 物理情報を設定
+        model.physicsBody = PhysicsBodyComponent(massProperties: .default,
+                                                 material: .default,
+                                                 mode: .static)
+        
+        // コリジョンを設定
+        model.generateCollisionShapes(recursive: false)
+        
+        // アンカーエンティティに追加
+        anchor.addChild(model)
+        
+        print("333333333333333")
+    
+        
+        return anchor
+    }
+
 
     @IBAction func tappedARButton(_ sender: Any) {
 //        makeSample()
 //        makeBullet()
         
-        setHorizontalPlane()
+//        setHorizontalPlane()
         
+        // 球を2つ配置する
+        virtualObjects.append(addVirtualObject(name: "Sphere",
+                                               nameExtension: "usdz",
+                                               position: [-0.015, 0.4, 0.0],
+                                               plane: planeAnchor!))
+
     }
     
     @IBAction func tappedARButton2(_ sender: Any) {
-        makeWallModel3()
-        
+//        makeWallModel3()
+        // 平面を追加する
+        planeAnchor = addPlane()
     }
     
     @IBAction func tappedARButton3(_ sender: Any) {
         
-        shoot5()
+        shoot6()
 //        lound()
         
     
@@ -525,6 +729,9 @@ extension ARTestViewController: ARSessionDelegate {
             print("==================")
             print("平面発見")
             print("anchors: \(anchors)")
+            
+            // 平面を追加する
+            self.planeAnchor = addPlane()
             
 //            makeWallModel2(anchor: planeAnchor.first!)
         }

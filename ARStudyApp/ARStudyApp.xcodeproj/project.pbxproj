@@ -16,6 +16,7 @@
 		8C4EBEF129E9A3E200D0B21F /* ARStudyAppUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4EBEF029E9A3E200D0B21F /* ARStudyAppUITestsLaunchTests.swift */; };
 		8C4EBEFE29EAEF6000D0B21F /* ARTestView.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8C4EBEFD29EAEF6000D0B21F /* ARTestView.storyboard */; };
 		8C4EBF0029EAEF7F00D0B21F /* ARTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4EBEFF29EAEF7F00D0B21F /* ARTestViewController.swift */; };
+		8C8978022A06C63900438B43 /* VirtualObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C8978012A06C63900438B43 /* VirtualObject.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +49,7 @@
 		8C4EBEF029E9A3E200D0B21F /* ARStudyAppUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARStudyAppUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		8C4EBEFD29EAEF6000D0B21F /* ARTestView.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ARTestView.storyboard; sourceTree = "<group>"; };
 		8C4EBEFF29EAEF7F00D0B21F /* ARTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARTestViewController.swift; sourceTree = "<group>"; };
+		8C8978012A06C63900438B43 /* VirtualObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualObject.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,6 +106,7 @@
 				8C4EBED929E9A3E100D0B21F /* LaunchScreen.storyboard */,
 				8C4EBEFD29EAEF6000D0B21F /* ARTestView.storyboard */,
 				8C4EBEFF29EAEF7F00D0B21F /* ARTestViewController.swift */,
+				8C8978012A06C63900438B43 /* VirtualObject.swift */,
 			);
 			path = ARStudyApp;
 			sourceTree = "<group>";
@@ -256,6 +259,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8C8978022A06C63900438B43 /* VirtualObject.swift in Sources */,
 				8C4EBECF29E9A3DE00D0B21F /* AppDelegate.swift in Sources */,
 				8C4EBED329E9A3DE00D0B21F /* Experience.rcproject in Sources */,
 				8C4EBF0029EAEF7F00D0B21F /* ARTestViewController.swift in Sources */,
