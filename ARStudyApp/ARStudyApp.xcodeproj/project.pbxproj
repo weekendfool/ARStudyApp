@@ -16,6 +16,8 @@
 		8C4EBEF129E9A3E200D0B21F /* ARStudyAppUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4EBEF029E9A3E200D0B21F /* ARStudyAppUITestsLaunchTests.swift */; };
 		8C4EBEFE29EAEF6000D0B21F /* ARTestView.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8C4EBEFD29EAEF6000D0B21F /* ARTestView.storyboard */; };
 		8C4EBF0029EAEF7F00D0B21F /* ARTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4EBEFF29EAEF7F00D0B21F /* ARTestViewController.swift */; };
+		8C6F6DD82A0BE06B00509EEF /* ARView.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8C6F6DD72A0BE06B00509EEF /* ARView.storyboard */; };
+		8C6F6DDA2A0BE0D800509EEF /* ARViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C6F6DD92A0BE0D800509EEF /* ARViewController.swift */; };
 		8C8978022A06C63900438B43 /* VirtualObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C8978012A06C63900438B43 /* VirtualObject.swift */; };
 /* End PBXBuildFile section */
 
@@ -49,6 +51,8 @@
 		8C4EBEF029E9A3E200D0B21F /* ARStudyAppUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARStudyAppUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		8C4EBEFD29EAEF6000D0B21F /* ARTestView.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ARTestView.storyboard; sourceTree = "<group>"; };
 		8C4EBEFF29EAEF7F00D0B21F /* ARTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARTestViewController.swift; sourceTree = "<group>"; };
+		8C6F6DD72A0BE06B00509EEF /* ARView.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ARView.storyboard; sourceTree = "<group>"; };
+		8C6F6DD92A0BE0D800509EEF /* ARViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARViewController.swift; sourceTree = "<group>"; };
 		8C8978012A06C63900438B43 /* VirtualObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VirtualObject.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -107,6 +111,8 @@
 				8C4EBEFD29EAEF6000D0B21F /* ARTestView.storyboard */,
 				8C4EBEFF29EAEF7F00D0B21F /* ARTestViewController.swift */,
 				8C8978012A06C63900438B43 /* VirtualObject.swift */,
+				8C6F6DD72A0BE06B00509EEF /* ARView.storyboard */,
+				8C6F6DD92A0BE0D800509EEF /* ARViewController.swift */,
 			);
 			path = ARStudyApp;
 			sourceTree = "<group>";
@@ -234,6 +240,7 @@
 			files = (
 				8C4EBEDB29E9A3E100D0B21F /* LaunchScreen.storyboard in Resources */,
 				8C4EBED829E9A3E100D0B21F /* Assets.xcassets in Resources */,
+				8C6F6DD82A0BE06B00509EEF /* ARView.storyboard in Resources */,
 				8C4EBEFE29EAEF6000D0B21F /* ARTestView.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -263,6 +270,7 @@
 				8C4EBECF29E9A3DE00D0B21F /* AppDelegate.swift in Sources */,
 				8C4EBED329E9A3DE00D0B21F /* Experience.rcproject in Sources */,
 				8C4EBF0029EAEF7F00D0B21F /* ARTestViewController.swift in Sources */,
+				8C6F6DDA2A0BE0D800509EEF /* ARViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
