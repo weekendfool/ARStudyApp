@@ -6,13 +6,13 @@
 //
 
 import UIKit
-import ReplayKit
+import RealityKit
 import ARKit
 
 class ARViewController: UIViewController {
     
 
-    @IBOutlet weak var arView: ARViewCont!
+    @IBOutlet weak var arView: ARView!
     override func viewDidLoad() {
         super.viewDidLoad()
 

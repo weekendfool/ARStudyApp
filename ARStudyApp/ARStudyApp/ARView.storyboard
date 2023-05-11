@@ -16,21 +16,21 @@
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <arView multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="exH-Jn-Fvm" customClass="ARViewCont">
-                                <rect key="frame" x="0.0" y="0.0" width="390" height="810"/>
+                            <arView multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JR3-ai-jwd">
+                                <rect key="frame" x="0.0" y="47" width="390" height="763"/>
                             </arView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="exH-Jn-Fvm" firstAttribute="top" secondItem="5EZ-qb-Rvc" secondAttribute="top" id="0EU-F9-gbx"/>
-                            <constraint firstItem="exH-Jn-Fvm" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="9Cg-Gq-LAc"/>
-                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="exH-Jn-Fvm" secondAttribute="trailing" id="XU9-zz-0ol"/>
-                            <constraint firstItem="vDu-zF-Fre" firstAttribute="bottom" secondItem="exH-Jn-Fvm" secondAttribute="bottom" id="tmQ-nY-JAR"/>
+                            <constraint firstItem="JR3-ai-jwd" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" id="api-cJ-VTd"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="bottom" secondItem="JR3-ai-jwd" secondAttribute="bottom" id="c4A-VS-fdo"/>
+                            <constraint firstItem="JR3-ai-jwd" firstAttribute="leading" secondItem="5EZ-qb-Rvc" secondAttribute="leading" id="jqw-Xy-EX6"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="JR3-ai-jwd" secondAttribute="trailing" id="jvm-5J-wdo"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="arView" destination="exH-Jn-Fvm" id="M1a-lz-CY0"/>
+                        <outlet property="arView" destination="JR3-ai-jwd" id="2zl-rU-98I"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
